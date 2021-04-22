@@ -1,7 +1,7 @@
 # Личный проект «TaskForce»
 
 * Студент: [Артём Горгуленко](https://up.htmlacademy.ru/yii/1/user/1707147).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Парфенов](https://htmlacademy.ru/profile/id926645).
 
 ---
 
