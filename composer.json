@@ -8,7 +8,7 @@
     ],
     "autoload": {
     	"psr-4": {
-    		"TaskClass\\": "src/"
+    		"TaskForce\\": "src/"
     	}
     },
     "require": {}

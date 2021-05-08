@@ -1,7 +1,7 @@
 <?php
 require_once "../vendor/autoload.php";
 
-$task = new TaskClass\Task("status", 0, 0);
+$task = new TaskForce\Models\Task("status", 0, 0);
 
 function assert_handler($file, $line, $code) 
 {
