@@ -1,0 +1,15 @@
+{
+    "name": "netro/1707147-task-force-1",
+    "authors": [
+        {
+            "name": "globglogabgaIlab",
+            "email": "github.alpixx@gmail.com"
+        }
+    ],
+    "autoload": {
+    	"psr-4": {
+    		"TaskForce\\": "src/"
+    	}
+    },
+    "require": {}
+}
