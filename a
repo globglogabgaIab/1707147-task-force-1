@@ -1,0 +1,337 @@
+[33mcommit 86029450ed12ca5ead68d9ea01c1b62150e71573[m[33m ([m[1;36mHEAD -> [m[1;32mmodule2-task1[m[33m)[m
+Author: globglogabgaIlab <github.alpixx@gmail.com>
+Date:   Sat Jun 12 09:12:08 2021 +0300
+
+    Module 2 task 1
+
+[1mdiff --git a/module1-task2/Task.php b/module1-task2/Task.php[m
+[1mnew file mode 100644[m
+[1mindex 0000000..95fd58f[m
+[1m--- /dev/null[m
+[1m+++ b/module1-task2/Task.php[m
+[36m@@ -0,0 +1,92 @@[m
+[32m+[m[32m<?php[m
+[32m+[m
+[32m+[m[32mnamespace TaskClass;[m
+[32m+[m
+[32m+[m[32mclass Task[m
+[32m+[m[32m{[m
+[32m+[m[32m    private string $currStatus;[m
+[32m+[m[32m    private int $userID;[m
+[32m+[m[32m    private int $workerID;[m
+[32m+[m[32m    private string $status;[m
+[32m+[m[32m    private string $action;[m
+[32m+[m[32m    // "Marker" in which state the job is in[m
+[32m+[m[32m    // One Task - ONLY one Status[m
+[32m+[m[32m    const STATUS_NEW = 'status_new';[m
+[32m+[m[32m    const STATUS_CANCELLED = 'status_cancelled';[m
+[32m+[m[32m    const STATUS_IN_PROGRESS = 'status_in_progress';[m
+[32m+[m[32m    const STATUS_DONE = 'status_done';[m
+[32m+[m[32m    const STATUS_FAILED = 'status_failed';[m
+[32m+[m[32m    // Available Actions for Task[m
+[32m+[m[32m    // Task may contain many Actions[m
+[32m+[m[32m    const ACTION_START = 'action_start';[m
+[32m+[m[32m    const ACTION_DONE = 'action_done';[m
+[32m+[m[32m    const ACTION_CANCEL = 'action_cancel';[m
+[32m+[m[32m    const ACTION_FAILED = 'action_failed';[m
+[32m+[m
+[32m+[m[32m    const STATUS_ACTION_MAP = [[m
+[32m+[m[32m            self::STATUS_NEW => [self::ACTION_START, self::ACTION_CANCEL],[m
+[32m+[m[32m            self::STATUS_CANCELLED => [self::ACTION_CANCEL],[m
+[32m+[m[32m            self::STATUS_IN_PROGRESS => [self::ACTION_START, self::ACTION_FAILED],[m
+[32m+[m[32m            self::STATUS_DONE => [self::ACTION_DONE],[m
+[32m+[m[32m            self::STATUS_FAILED => [self::ACTION_FAILED][m
+[32m+[m[32m        ];[m
+[32m+[m[32m    const ACTION_STATUS_MAP = [[m
+[32m+[m[32m            self::ACTION_START => [self::STATUS_IN_PROGRESS],[m
+[32m+[m[32m            self::ACTION_DONE => [self::STATUS_DONE],[m
+[32m+[m[32m            self::ACTION_CANCEL => [self::STATUS_CANCELLED],[m
+[32m+[m[32m            self::ACTION_FAILED => [self::STATUS_FAILED][m
+[32m+[m[32m        ];[m
+[32m+[m[32m    /**[m
+[32m+[m[32m    * Class constructor[m
+[32m+[m[32m    *[m[41m [m
+[32m+[m[32m    * Invoked when creating a new object of class[m
+[32m+[m[32m    * Collects job status, customer id and performer id[m
+[32m+[m[32m    *[m
+[32m+[m[32m    * @param string $currStatus, int userID, int workerID[m
+[32m+[m[32m    * @return void[m
+[32m+[m[32m    */[m
+[32m+[m[32m    public function __construct(string $currStatus, int $userID, int $workerID)[m[41m [m
+[32m+[m[32m    {[m
+[32m+[m[32m        $this->currStatus = $currStatus;[m
+[32m+[m[32m        $this->userID = $userID;[m
+[32m+[m[32m        $this->workerID = $workerID;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m    * Get Available actions for current status[m
+[32m+[m[32m    *[m[41m [m
+[32m+[m[32m    * Takes $status and returns a list of 0 to 2 elements[m
+[32m+[m[32m    * (0 elements if you assign a status that is not in the STATUS_ACTION_MAP dictionary)[m
+[32m+[m[32m    * Array contains available actions[m
+[32m+[m[32m    *[m[41m [m
+[32m+[m[32m    * @param string $status[m
+[32m+[m[32m    * @return array[m
+[32m+[m[32m    */[m
+[32m+[m[32m    public function getAllowActionsForStatus(string $status): array[m[41m [m
+[32m+[m[32m    {[m
+[32m+[m[32m        if (array_key_exists($status, self::STATUS_ACTION_MAP)) {[m
+[32m+[m[32m            return self::STATUS_ACTION_MAP[$status];[m
+[32m+[m[32m        }[m
+[32m+[m[32m        return [];[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m    * Provides information on which status to assign[m
+[32m+[m[32m    * depending on the Action[m
+[32m+[m[32m    *[m[41m [m
+[32m+[m[32m    * Takes $status and returns a list of 0 to 2 elements[m
+[32m+[m[32m    * (0 elements if you assign a status that is not in the STATUS_ACTION_MAP dictionary)[m
+[32m+[m[32m    * Array contains available actions[m
+[32m+[m[32m    *[m[41m [m
+[32m+[m[32m    * @param string $action[m
+[32m+[m[32m    * @return array[m
+[32m+[m[32m    */[m
+[32m+[m[32m    public function getStatusForAction(string $action): array[m[41m [m
+[32m+[m[32m    {[m
+[32m+[m[32m        if (array_key_exists($action, self::ACTION_STATUS_MAP)) {[m
+[32m+[m[32m            return self::ACTION_STATUS_MAP[$action];[m
+[32m+[m[32m        }[m
+[32m+[m[32m        return [];[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m}[m
+[1mdiff --git a/module1-task2/Test.php b/module1-task2/Test.php[m
+[1mnew file mode 100644[m
+[1mindex 0000000..4195302[m
+[1m--- /dev/null[m
+[1m+++ b/module1-task2/Test.php[m
+[36m@@ -0,0 +1,29 @@[m
+[32m+[m[32m<?php[m
+[32m+[m[32minclude 'Task.php';[m
+[32m+[m
+[32m+[m[32muse TaskClass\Task as Task;[m
+[32m+[m
+[32m+[m[32m$task = new Task("status", 0, 0);[m
+[32m+[m
+[32m+[m[32mfunction assert_handler($file, $line, $code)[m[41m [m
+[32m+[m[32m{[m
+[32m+[m	[32mprint_r("False assert[m
+[32m+[m[32mFile: $file[m
+[32m+[m[32mLine: $line[m
+[32m+[m[32mCode: $code[m
+[32m+[m[32m");[m
+[32m+[m[32m}[m
+[32m+[m[32massert_options(ASSERT_CALLBACK, 'assert_handler');[m
+[32m+[m[32massert($task->getAllowActionsForStatus($task::STATUS_NEW) == [$task::ACTION_START, $task::ACTION_CANCEL]);[m
+[32m+[m[32massert($task->getAllowActionsForStatus($task::STATUS_CANCELLED) == [$task::ACTION_CANCEL]);[m
+[32m+[m[32massert($task->getAllowActionsForStatus($task::STATUS_IN_PROGRESS) == [$task::ACTION_START, $task::ACTION_FAILED]);[m
+[32m+[m[32massert($task->getAllowActionsForStatus($task::STATUS_DONE) == [$task::ACTION_DONE]);[m
+[32m+[m[32massert($task->getAllowActionsForStatus($task::STATUS_NEW) == [$task::ACTION_START, $task::ACTION_CANCEL]);[m
+[32m+[m
+[32m+[m[32massert($task->getStatusForAction($task::ACTION_START) == [$task::STATUS_IN_PROGRESS]);[m
+[32m+[m[32massert($task->getStatusForAction($task::ACTION_DONE) == [$task::STATUS_DONE]);[m
+[32m+[m[32massert($task->getStatusForAction($task::ACTION_CANCEL) == [$task::STATUS_CANCELLED]);[m
+[32m+[m[32massert($task->getStatusForAction($task::ACTION_FAILED) == [$task::STATUS_FAILED]);[m
+[32m+[m
+[32m+[m[32mprint_r("All working fine")[m
+[32m+[m[32m?>[m
+\ No newline at end of file[m
+[1mdiff --git a/taskforce.sql b/taskforce.sql[m
+[1mnew file mode 100644[m
+[1mindex 0000000..1398593[m
+[1m--- /dev/null[m
+[1m+++ b/taskforce.sql[m
+[36m@@ -0,0 +1,244 @@[m
+[32m+[m[32m-- MySQL Script generated by MySQL Workbench[m
+[32m+[m[32m-- Sat Jun 12 09:00:20 2021[m
+[32m+[m[32m-- Model: New Model    Version: 1.0[m
+[32m+[m[32m-- MySQL Workbench Forward Engineering[m
+[32m+[m
+[32m+[m[32mSET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;[m
+[32m+[m[32mSET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;[m
+[32m+[m[32mSET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';[m
+[32m+[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32m-- Schema taskforce[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32m-- Schema taskforce[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32mCREATE SCHEMA IF NOT EXISTS `taskforce` DEFAULT CHARACTER SET utf8 ;[m
+[32m+[m[32mUSE `taskforce` ;[m
+[32m+[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32m-- Table `taskforce`.`cities`[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32mCREATE TABLE IF NOT EXISTS `taskforce`.`cities` ([m
+[32m+[m[32m  `ID` INT NOT NULL,[m
+[32m+[m[32m  `city_name` VARCHAR(45) NOT NULL,[m
+[32m+[m[32m  `coord` POINT NOT NULL,[m
+[32m+[m[32m  PRIMARY KEY (`ID`))[m
+[32m+[m[32mENGINE = InnoDB;[m
+[32m+[m
+[32m+[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32m-- Table `taskforce`.`user`[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32mCREATE TABLE IF NOT EXISTS `taskforce`.`user` ([m
+[32m+[m[32m  `ID` INT NOT NULL AUTO_INCREMENT,[m
+[32m+[m[32m  `email` VARCHAR(256) NOT NULL,[m
+[32m+[m[32m  `name` VARCHAR(45) NOT NULL,[m
+[32m+[m[32m  `cityID` INT NULL,[m
+[32m+[m[32m  `password_hash` VARCHAR(32) NOT NULL,[m
+[32m+[m[32m  `birthday` DATE NULL,[m
+[32m+[m[32m  `phone` INT NULL,[m
+[32m+[m[32m  `skype` VARCHAR(45) NULL,[m
+[32m+[m[32m  `avatar_ID` INT NULL COMMENT 'Contains path to jpg\\png',[m
+[32m+[m[32m  `option_notification_new_message` TINYINT(1) NULL,[m
+[32m+[m[32m  `option_notification_task_change` TINYINT(1) NULL,[m
+[32m+[m[32m  `option_notification_new_comment` TINYINT(1) NULL,[m
+[32m+[m[32m  `option_privacy_do_not_show_profile` TINYINT(1) NULL,[m
+[32m+[m[32m  `option_privacy_showContactsOnlyToExecutor` TINYINT(1) NULL,[m
+[32m+[m[32m  `photos_of_work_ID` INT NULL,[m
+[32m+[m[32m  `is_executor` TINYINT(1) NULL,[m
+[32m+[m[32m  `date_of_registration` DATETIME NOT NULL,[m
+[32m+[m[32m  `rating` FLOAT NULL,[m
+[32m+[m[32m  `another_contact` VARCHAR(45) NULL,[m
+[32m+[m[32m  `information_about_user` VARCHAR(45) NULL,[m
+[32m+[m[32m  PRIMARY KEY (`ID`),[m
+[32m+[m[32m  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,[m
+[32m+[m[32m  UNIQUE INDEX `phone_UNIQUE` (`phone` ASC) VISIBLE,[m
+[32m+[m[32m  UNIQUE INDEX `ID_UNIQUE` (`ID` ASC) VISIBLE,[m
+[32m+[m[32m  INDEX `ID_idx` (`cityID` ASC) VISIBLE,[m
+[32m+[m[32m  UNIQUE INDEX `skype_UNIQUE` (`skype` ASC) VISIBLE,[m
+[32m+[m[32m  CONSTRAINT `ID`[m
+[32m+[m[32m    FOREIGN KEY (`cityID`)[m
+[32m+[m[32m    REFERENCES `taskforce`.`cities` (`ID`)[m
+[32m+[m[32m    ON DELETE NO ACTION[m
+[32m+[m[32m    ON UPDATE NO ACTION)[m
+[32m+[m[32mENGINE = InnoDB;[m
+[32m+[m
+[32m+[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32m-- Table `taskforce`.`categories`[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32mCREATE TABLE IF NOT EXISTS `taskforce`.`categories` ([m
+[32m+[m[32m  `ID` INT NOT NULL AUTO_INCREMENT,[m
+[32m+[m[32m  `category_name` VARCHAR(45) NOT NULL,[m
+[32m+[m[32m  PRIMARY KEY (`ID`))[m
+[32m+[m[32mENGINE = InnoDB;[m
+[32m+[m
+[32m+[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32m-- Table `taskforce`.`status`[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32mCREATE TABLE IF NOT EXISTS `taskforce`.`status` ([m
+[32m+[m[32m  `ID` INT NOT NULL AUTO_INCREMENT,[m
+[32m+[m[32m  `name` VARCHAR(45) NULL,[m
+[32m+[m[32m  PRIMARY KEY (`ID`))[m
+[32m+[m[32mENGINE = InnoDB;[m
+[32m+[m
+[32m+[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32m-- Table `taskforce`.`task`[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32mCREATE TABLE IF NOT EXISTS `taskforce`.`task` ([m
+[32m+[m[32m  `ID` INT NOT NULL AUTO_INCREMENT,[m
+[32m+[m[32m  `status` INT NOT NULL,[m
+[32m+[m[32m  `creator_ID` INT NOT NULL,[m
+[32m+[m[32m  `category_ID` INT NOT NULL,[m
+[32m+[m[32m  `task_price` INT NOT NULL,[m
+[32m+[m[32m  `attachment_ID` INT NULL,[m
+[32m+[m[32m  `name` VARCHAR(45) NOT NULL,[m
+[32m+[m[32m  `description` VARCHAR(500) NOT NULL,[m
+[32m+[m[32m  `done` TINYINT(1) NOT NULL DEFAULT 0,[m
+[32m+[m[32m  `address` VARCHAR(100) NOT NULL,[m
+[32m+[m[32m  `deadline` DATETIME NULL,[m
+[32m+[m[32m  `date_of_creation` DATETIME NULL,[m
+[32m+[m[32m  `executor_ID` INT NULL,[m
+[32m+[m[32m  PRIMARY KEY (`ID`),[m
+[32m+[m[32m  INDEX `ID_idx1` (`category_ID` ASC) VISIBLE,[m
+[32m+[m[32m  INDEX `ID_idx2` (`creator_ID` ASC) VISIBLE,[m
+[32m+[m[32m  INDEX `ID_idx3` (`status` ASC) VISIBLE,[m
+[32m+[m[32m  CONSTRAINT `ID`[m
+[32m+[m[32m    FOREIGN KEY (`category_ID`)[m
+[32m+[m[32m    REFERENCES `taskforce`.`categories` (`ID`)[m
+[32m+[m[32m    ON DELETE NO ACTION[m
+[32m+[m[32m    ON UPDATE NO ACTION,[m
+[32m+[m[32m  CONSTRAINT `ID`[m
+[32m+[m[32m    FOREIGN KEY (`creator_ID`)[m
+[32m+[m[32m    REFERENCES `taskforce`.`user` (`ID`)[m
+[32m+[m[32m    ON DELETE NO ACTION[m
+[32m+[m[32m    ON UPDATE NO ACTION,[m
+[32m+[m[32m  CONSTRAINT `ID`[m
+[32m+[m[32m    FOREIGN KEY (`status`)[m
+[32m+[m[32m    REFERENCES `taskforce`.`status` (`ID`)[m
+[32m+[m[32m    ON DELETE NO ACTION[m
+[32m+[m[32m    ON UPDATE NO ACTION)[m
+[32m+[m[32mENGINE = InnoDB;[m
+[32m+[m
+[32m+[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32m-- Table `taskforce`.`response`[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32mCREATE TABLE IF NOT EXISTS `taskforce`.`response` ([m
+[32m+[m[32m  `task_ID` INT NOT NULL,[m
+[32m+[m[32m  `responser_ID` INT NOT NULL,[m
+[32m+[m[32m  `response_price` INT NOT NULL,[m
+[32m+[m[32m  `comment` VARCHAR(45) NULL,[m
+[32m+[m[32m  INDEX `ID_idx` (`task_ID` ASC) VISIBLE,[m
+[32m+[m[32m  INDEX `ID_idx1` (`responser_ID` ASC) VISIBLE,[m
+[32m+[m[32m  CONSTRAINT `ID`[m
+[32m+[m[32m    FOREIGN KEY (`task_ID`)[m
+[32m+[m[32m    REFERENCES `taskforce`.`task` (`ID`)[m
+[32m+[m[32m    ON DELETE NO ACTION[m
+[32m+[m[32m    ON UPDATE NO ACTION,[m
+[32m+[m[32m  CONSTRAINT `ID`[m
+[32m+[m[32m    FOREIGN KEY (`responser_ID`)[m
+[32m+[m[32m    REFERENCES `taskforce`.`user` (`ID`)[m
+[32m+[m[32m    ON DELETE NO ACTION[m
+[32m+[m[32m    ON UPDATE NO ACTION)[m
+[32m+[m[32mENGINE = InnoDB;[m
+[32m+[m
+[32m+[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32m-- Table `taskforce`.`attachments`[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32mCREATE TABLE IF NOT EXISTS `taskforce`.`attachments` ([m
+[32m+[m[32m  `ID` INT NOT NULL AUTO_INCREMENT,[m
+[32m+[m[32m  `path` VARCHAR(45) NOT NULL,[m
+[32m+[m[32m  PRIMARY KEY (`ID`))[m
+[32m+[m[32mENGINE = InnoDB;[m
+[32m+[m
+[32m+[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32m-- Table `taskforce`.`chats`[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32mCREATE TABLE IF NOT EXISTS `taskforce`.`chats` ([m
+[32m+[m[32m  `ID` INT NOT NULL AUTO_INCREMENT,[m
+[32m+[m[32m  `recepient_ID` INT NOT NULL,[m
+[32m+[m[32m  `sender_ID` INT NOT NULL,[m
+[32m+[m[32m  `message` VARCHAR(100) NOT NULL,[m
+[32m+[m[32m  `viewed` TINYINT(1) NOT NULL DEFAULT 0,[m
+[32m+[m[32m  `time` DATETIME NULL,[m
+[32m+[m[32m  PRIMARY KEY (`ID`))[m
+[32m+[m[32mENGINE = InnoDB;[m
+[32m+[m
+[32m+[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32m-- Table `taskforce`.`reviews`[m
+[32m+[m[32m-- -----------------------------------------------------[m
+[32m+[m[32mCREATE TABLE IF NOT EXISTS `taskforce`.`reviews` ([m
+[32m+[m[32m  `ID` INT NOT NULL AUTO_INCREMENT,[m
+[32m+[m[32m  `user_ID` INT NOT NULL,[m
+[32m+[m[32m  `reviewer_ID` INT NOT NULL,[m
+[32m+[m[32m  `mark` INT NOT NULL,[m
+[32m+[m[32m  `text` VARCHAR(150) NULL,[m
+[32m+[m[32m  PRIMARY KEY (`ID`),[m
+[32m+[m[32m  INDEX `ID_idx` (`user_ID` ASC) VISIBLE,[m
+[32m+[m[32m  INDEX `ID_idx1` (`reviewer_ID` ASC) VISIBLE,[m
+[32m+[m[32m  CONSTRAINT `ID`[m
+[32m+[m[32m    FOREIGN KEY (`user_ID`)[m
+[32m+[m[32m    REFERENCES `taskforce`.`user` (`ID`)[m
+[32m+[m[32m    ON DELETE NO ACTION[m
+[32m+[m[32m    ON UPDA
