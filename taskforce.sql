@@ -3,7 +3,7 @@
 -- Model: New Model    Version: 1.0
 -- MySQL Workbench Forward Engineering
 
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_unique_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
@@ -54,12 +54,12 @@ CREATE TABLE IF NOT EXISTS `taskforce`.`users` (
   `information_about_user` VARCHAR(45) NULL,
   `date_of_last_visit` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
-  UNIQUE INDEX `phone_UNIQUE` (`phone` ASC) VISIBLE,
-  UNIQUE INDEX `ID_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `ID_idx` (`city_id` ASC) VISIBLE,
-  UNIQUE INDEX `skype_UNIQUE` (`skype` ASC) VISIBLE,
-  CONSTRAINT `ID`
+  UNIQUE INDEX `email_unique` (`email` ASC) VISIBLE,
+  UNIQUE INDEX `phone_unique` (`phone` ASC) VISIBLE,
+  UNIQUE INDEX `id_unique` (`id` ASC) VISIBLE,
+  INDEX `id_idx` (`city_id` ASC) VISIBLE,
+  UNIQUE INDEX `skype_unique` (`skype` ASC) VISIBLE,
+  CONSTRAINT `id`
     FOREIGN KEY (`city_id`)
     REFERENCES `taskforce`.`cities` (`id`)
     ON DELETE NO ACTION
@@ -94,14 +94,14 @@ CREATE TABLE IF NOT EXISTS `taskforce`.`tasks` (
   `date_of_creation` DATETIME NOT NULL,
   `executor_id` INT NULL,
   PRIMARY KEY (`id`),
-  INDEX `ID_idx1` (`category_id` ASC) VISIBLE,
-  INDEX `ID_idx2` (`creator_id` ASC) VISIBLE,
-  CONSTRAINT `ID`
+  INDEX `id_idx1` (`category_id` ASC) VISIBLE,
+  INDEX `id_idx2` (`creator_id` ASC) VISIBLE,
+  CONSTRAINT `id`
     FOREIGN KEY (`category_id`)
     REFERENCES `taskforce`.`categories` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `ID`
+  CONSTRAINT `id`
     FOREIGN KEY (`creator_id`)
     REFERENCES `taskforce`.`users` (`id`)
     ON DELETE NO ACTION
@@ -117,14 +117,14 @@ CREATE TABLE IF NOT EXISTS `taskforce`.`responses` (
   `responser_id` INT NOT NULL,
   `price` INT NOT NULL,
   `comment` VARCHAR(500) NULL,
-  INDEX `ID_idx` (`task_id` ASC) VISIBLE,
-  INDEX `ID_idx1` (`responser_id` ASC) VISIBLE,
-  CONSTRAINT `ID`
+  INDEX `id_idx` (`task_id` ASC) VISIBLE,
+  INDEX `id_idx1` (`responser_id` ASC) VISIBLE,
+  CONSTRAINT `id`
     FOREIGN KEY (`task_id`)
     REFERENCES `taskforce`.`tasks` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `ID`
+  CONSTRAINT `id`
     FOREIGN KEY (`responser_id`)
     REFERENCES `taskforce`.`users` (`id`)
     ON DELETE NO ACTION
@@ -166,14 +166,14 @@ CREATE TABLE IF NOT EXISTS `taskforce`.`reviews` (
   `mark` INT NOT NULL,
   `text` TEXT(150) NULL,
   PRIMARY KEY (`id`),
-  INDEX `ID_idx` (`user_id` ASC) VISIBLE,
-  INDEX `ID_idx1` (`reviewer_id` ASC) VISIBLE,
-  CONSTRAINT `ID`
+  INDEX `id_idx` (`user_id` ASC) VISIBLE,
+  INDEX `id_idx1` (`reviewer_id` ASC) VISIBLE,
+  CONSTRAINT `id`
     FOREIGN KEY (`user_id`)
     REFERENCES `taskforce`.`users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `ID`
+  CONSTRAINT `id`
     FOREIGN KEY (`reviewer_id`)
     REFERENCES `taskforce`.`users` (`id`)
     ON DELETE NO ACTION
@@ -187,14 +187,14 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `taskforce`.`attachments` (
   `user_id` INT NULL,
   `attachment_id` INT NULL,
-  INDEX `ID_idx` (`user_id` ASC) VISIBLE,
-  INDEX `ID_idx1` (`attachment_id` ASC) VISIBLE,
-  CONSTRAINT `ID`
+  INDEX `id_idx` (`user_id` ASC) VISIBLE,
+  INDEX `id_idx1` (`attachment_id` ASC) VISIBLE,
+  CONSTRAINT `id`
     FOREIGN KEY (`user_id`)
     REFERENCES `taskforce`.`users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `ID`
+  CONSTRAINT `id`
     FOREIGN KEY (`attachment_id`)
     REFERENCES `taskforce`.`attachments_` (`id`)
     ON DELETE NO ACTION
@@ -208,14 +208,14 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `taskforce`.`attachments_task` (
   `task_id` INT NULL,
   `attachment_id` INT NULL,
-  INDEX `ID_idx1` (`attachment_id` ASC) VISIBLE,
-  INDEX `ID_idx` (`task_id` ASC) VISIBLE,
-  CONSTRAINT `ID`
+  INDEX `id_idx1` (`attachment_id` ASC) VISIBLE,
+  INDEX `id_idx` (`task_id` ASC) VISIBLE,
+  CONSTRAINT `id`
     FOREIGN KEY (`attachment_id`)
     REFERENCES `taskforce`.`attachments_` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `ID`
+  CONSTRAINT `id`
     FOREIGN KEY (`task_id`)
     REFERENCES `taskforce`.`tasks` (`id`)
     ON DELETE NO ACTION
