@@ -13,3 +13,4 @@ class ActionCancel extends AbstractAction
         return ($user_id === $task_creator_id) && ($status === Task::STATUS_NEW);
     }
 }
+
