@@ -13,4 +13,4 @@ class ActionStart extends AbstractAction
         return ($user_id === $executor_id) && ($status === Task::STATUS_NEW);
     }
 }
-
+//

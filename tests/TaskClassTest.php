@@ -29,4 +29,4 @@ assert($task->getAllowedActions($task::STATUS_IN_PROGRESS)[0]->checkAllowByUserI
 assert($task->getAllowedActions($task::STATUS_IN_PROGRESS)[1]->checkAllowByUserIds(1, 2, 1, "status_new") == false);
 
 print_r("All working fine");
-
+//
