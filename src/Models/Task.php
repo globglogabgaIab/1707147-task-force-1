@@ -34,8 +34,9 @@ class Task
      * Invoked when creating a new object of class
      * Collects job status, customer id and performer id
      *
-     * @param string $currStatus , int userID, int workerID
-     * @return void
+     * @param string $current_status
+     * @param int $user_id
+     * @param int $executor_id
      */
     public function __construct(string $current_status, int $user_id, int $executor_id)
     {
@@ -54,13 +55,13 @@ class Task
      * @param string $status
      * @return array
      */
-    public function getAllowedActionsForStatus(string $status): array
+    public function getAllowedActions(string $status): array
     {
         if ($status == self::STATUS_NEW) {
-            return [new Actions\action_start(), new Actions\action_cancel()];
+            return [new Actions\ActionStart(), new Actions\ActionCancel()];
         }
         if ($status == self::STATUS_IN_PROGRESS) {
-            return [new Actions\action_done(), new Actions\action_failed()];
+            return [new Actions\ActionDone(), new Actions\ActionFailed()];
         }
         return [];
     }
