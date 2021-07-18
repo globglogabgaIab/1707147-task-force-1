@@ -1,5 +1,8 @@
 <?php
 namespace TaskForce\Models;
+use TaskForce\Models\Exceptions\TaskException;
+
+require_once "../../vendor/autoload.php";
 
 class Task
 {
@@ -28,6 +31,15 @@ class Task
         self::ACTION_FAILED => [self::STATUS_FAILED]
     ];
 
+    const STATUS_ARRAY = [self::STATUS_NEW,
+        self::STATUS_IN_PROGRESS,
+        self::ACTION_CANCEL,
+        self::STATUS_CANCELLED,
+        self::STATUS_FAILED];
+    private string $current_status;
+    private int $user_id;
+    private int $executor_id;
+
     /**
      * Class constructor
      *
@@ -37,12 +49,18 @@ class Task
      * @param string $current_status
      * @param int $user_id
      * @param int $executor_id
+     * @throws TaskException
      */
     public function __construct(string $current_status, int $user_id, int $executor_id)
     {
-        $this->current_status = $current_status;
-        $this->user_id = $user_id;
-        $this->executor_id = $executor_id;
+        if (!in_array($current_status, self::STATUS_ARRAY)) {
+            throw new TaskException();
+        }
+        else {
+            $this->current_status = $current_status;
+            $this->user_id = $user_id;
+            $this->executor_id = $executor_id;
+        }
     }
 
     /**
@@ -54,6 +72,7 @@ class Task
      *
      * @param string $status
      * @return array
+     * @throws TaskException
      */
     public function getAllowedActions(string $status): array
     {
@@ -63,8 +82,9 @@ class Task
         if ($status == self::STATUS_IN_PROGRESS) {
             return [new Actions\ActionDone(), new Actions\ActionFailed()];
         }
-        return [];
+        throw new TaskException("Wrong status");
     }
+
 
     /**
      * Provides information on which status to assign
