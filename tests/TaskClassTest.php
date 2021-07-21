@@ -1,10 +1,5 @@
 <?php
 
-use TaskForce\Models\Actions\ActionCancel;
-use TaskForce\Models\Actions\ActionDone;
-use TaskForce\Models\Actions\ActionFailed;
-use TaskForce\Models\Actions\ActionStart;
-
 require_once "../vendor/autoload.php";
 $task = new TaskForce\Models\Task("status", 0, 0);
 
